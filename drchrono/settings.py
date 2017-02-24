@@ -109,3 +109,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
+
+# keys for Oauth
+SOCIAL_AUTH_DRCHRONO_KEY = 'CIb34CzsBiAWyKz6tME9Sg4SgWLEt469NO9DQptG'
+SOCIAL_AUTH_DRCHRONO_SECRET = 'DxxB9rcQZt8usKWxagbmhTfPT9sTUYTkZZkhOVWwBm7c6t9FzKBwWihxylAqvrNIIZdUkbX21vkWAEOWc5EDBkvOiIoFPrmvjkDtBOOmVzdSGuoectX4LTiiookirCyW'
+SOCIAL_AUTH_DRCHRONO_SCOPE = ['patients:summary:read']
+LOGIN_REDIRECT_URL = '/user'

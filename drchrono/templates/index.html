@@ -1,8 +1,45 @@
+{% load staticfiles %}
+
 <!DOCTYPE html>
 <html>
+  <head>
+      <title>drchrono Birthday Reminder</title>
+      <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+      <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
   <body>
-    <a href="{% url 'social:begin' 'drchrono' %}">
-      drchrono OAuth
-    </a>
+
+
+
+  {% if not request.user.is_authenticated %}
+      <div class="col-md-offset-2 col-md-8 login">
+          <div class="jumbotron welcome">
+              <h1>Welcome to <span class="drchrono-logo">dr</span>chrono!</h1>
+
+              <p>All-in-one practice management, electronic health records and billing solution.</p>
+              <br>
+              <a class="btn btn-lg btn-success login-button" href="{% url 'social:begin' 'drchrono' %}">
+                  Log in with drchrono
+              </a>
+          </div>
+      </div>
+
+
+  {% else %}
+      {% block navbar %}
+          {% include 'navbar.html' %}
+      {% endblock %}
+
+      {% block content %}
+          <div class="container">
+            <h3>You are already logged in! Navigate to the " <a href="{% url 'user' %}">User</a> " page</h3>
+          </div>
+
+      {% endblock %}
+  {% endif %}
+
+
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
   </body>
 </html>
