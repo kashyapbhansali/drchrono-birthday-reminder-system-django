@@ -3,11 +3,17 @@ from django.shortcuts import render, redirect
 from django.views import generic
 from django.contrib.auth import logout as drchrono_logout
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.mail import send_mail,send_mass_mail
 from .models import PatientModel
+from .forms import birthdayEmailForm
+from django.conf import settings
 import requests
 from pprint import pprint
 
 def home(request):
+    if not request.user.is_authenticated():
+        return redirect('/')
+
     template = 'home.html'
     context = {'username': request.user}
     user_instance = request.user.social_auth.get()
@@ -48,10 +54,27 @@ def home(request):
     return render(request, template, context)
 
 def user(request):
+    #get all patients who have an email id and birthdate
+    message = settings.EMAIL_BIRTHDAY_DEFAULT_MESSAGE
     p = PatientModel.objects.exclude(patient_email="").exclude(birthday=None)
-    #print p
+    form = birthdayEmailForm(request.POST or None, initial={'message': message})
+    confirmation = None
+
+    if form.is_valid():
+        name = "drchrono team"
+        subject = "Happy Birthday from drchrono!"
+        message = form.cleaned_data['message']
+        from_email = "drchrono@drchrono.com"
+        recipient_list = ["kashyapbhansali7@gmail.com","sagarshah2007@gmail.com"]
+        #datatuple for sending mass mail
+        email_tuple = ((subject, message, from_email, recipient_list),)
+        count = send_mass_mail(email_tuple, fail_silently=False)
+        confirmation = "Birthday wishes were sent to %s people." % count
+
     template = 'user.html'
-    context = {'patient_data': p}
+    context = {'patient_data': p, 'form': form, 'confirmation':confirmation}
+
+
     return render(request, template, context)
 
 def logout(request):

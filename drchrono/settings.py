@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'drchrono',
     'social.apps.django_app.default',
+    'crispy_forms'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -117,3 +118,16 @@ SOCIAL_AUTH_DRCHRONO_KEY = 'CIb34CzsBiAWyKz6tME9Sg4SgWLEt469NO9DQptG'
 SOCIAL_AUTH_DRCHRONO_SECRET = 'DxxB9rcQZt8usKWxagbmhTfPT9sTUYTkZZkhOVWwBm7c6t9FzKBwWihxylAqvrNIIZdUkbX21vkWAEOWc5EDBkvOiIoFPrmvjkDtBOOmVzdSGuoectX4LTiiookirCyW'
 SOCIAL_AUTH_DRCHRONO_SCOPE = ['patients:read']
 LOGIN_REDIRECT_URL = '/home'
+
+
+#setting up SMTP for emails
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'kashyapbhansali7@gmail.com'
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = '587'
+EMAIL_USE_TLS = True
+EMAIL_BIRTHDAY_DEFAULT_MESSAGE = "Hi, \n\nWishing you a very Happy Birthday! On this occassion we invite you for a free checkup, " \
+                                 "so that you have a healthy & wealthy year ahead :) \n\n- drchrono team"
+
+#config for crispy forms
+CRISPY_TEMPLATE_PACK = 'bootstrap3'

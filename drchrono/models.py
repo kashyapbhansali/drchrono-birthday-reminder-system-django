@@ -1,7 +1,8 @@
 from django.db import models
-
+from django.utils.encoding import python_2_unicode_compatible
 # Create your models here.
 
+@python_2_unicode_compatible
 class PatientModel(models.Model):
     first_name = models.CharField(max_length=20, null=False)
     last_name = models.CharField(max_length=20, null=False)

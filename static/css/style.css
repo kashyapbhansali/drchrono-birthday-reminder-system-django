@@ -13,8 +13,11 @@
 }
 
 .welcome {
-        position: relative;
     margin: 4%;
     padding: 4%;
     border-radius: 2%;
+}
+
+.home-message {
+    font-size: 18px;
 }
