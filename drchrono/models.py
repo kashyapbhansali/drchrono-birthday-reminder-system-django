@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+import datetime
 # Create your models here.
 
 @python_2_unicode_compatible
@@ -8,7 +9,7 @@ class PatientModel(models.Model):
     last_name = models.CharField(max_length=20, null=False)
     doctor_id = models.IntegerField(null=False)
     gender = models.CharField(max_length=10)
-    birthday = models.CharField(max_length=10, null=True)
+    birthday = models.DateField(default=datetime.date)
     patient_id = models.IntegerField(null=False, primary_key=True)
     patient_email = models.EmailField(default="")
 

@@ -7,6 +7,7 @@ from django.core.mail import send_mail,send_mass_mail
 from .models import PatientModel
 from .forms import birthdayEmailForm
 from django.conf import settings
+import datetime
 import requests
 from pprint import pprint
 
@@ -30,7 +31,7 @@ def home(request):
 
     while True:
         r = requests.get(patients_url, headers=headers)
-        print r.raise_for_status()
+        #print r.raise_for_status()
         patient_data = r.json()
         #pprint(patient_data)
         patient_list.extend(patient_data['results'])
@@ -40,12 +41,16 @@ def home(request):
     #save data using PatientModel
 
     for patient in patient_list:
+        #defuult date if birthdate not available
+        dob = '0001-01-01'
+        if patient['date_of_birth']:
+            dob = patient['date_of_birth']
         p = PatientModel(
             first_name=patient['first_name'],
             last_name=patient['last_name'],
             doctor_id=patient['doctor'],
             gender=patient['gender'],
-            birthday=patient['date_of_birth'],
+            birthday=dob,
             patient_id=patient['id'],
             patient_email=patient['email']
         )
@@ -56,7 +61,11 @@ def home(request):
 def user(request):
     #get all patients who have an email id and birthdate
     message = settings.EMAIL_BIRTHDAY_DEFAULT_MESSAGE
-    p = PatientModel.objects.exclude(patient_email="").exclude(birthday=None)
+    p = PatientModel.objects.exclude(patient_email="")
+    birthdays = PatientModel.objects.filter(birthday__day=datetime.date.today().day,birthday__month=datetime.date.today().month).exclude(birthday__year=1)
+    birthday_email_list = map(lambda x:x['patient_email'],birthdays.values())
+    #pprint(birthday_email_list)
+    #pprint(birthdays)
     form = birthdayEmailForm(request.POST or None, initial={'message': message})
     confirmation = None
 
@@ -65,14 +74,14 @@ def user(request):
         subject = "Happy Birthday from drchrono!"
         message = form.cleaned_data['message']
         from_email = "drchrono@drchrono.com"
-        recipient_list = ["kashyapbhansali7@gmail.com","sagarshah2007@gmail.com"]
+        recipient_list = birthday_email_list
         #datatuple for sending mass mail
         email_tuple = ((subject, message, from_email, recipient_list),)
         count = send_mass_mail(email_tuple, fail_silently=False)
         confirmation = "Birthday wishes were sent to %s people." % count
 
     template = 'user.html'
-    context = {'patient_data': p, 'form': form, 'confirmation':confirmation}
+    context = {'patient_data': p, 'form': form, 'confirmation': confirmation, 'birthdays': birthdays}
 
 
     return render(request, template, context)

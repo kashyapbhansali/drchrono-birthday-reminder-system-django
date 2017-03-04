@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import datetime
 
 
 class Migration(migrations.Migration):
@@ -17,8 +18,9 @@ class Migration(migrations.Migration):
                 ('last_name', models.CharField(max_length=20)),
                 ('doctor_id', models.IntegerField()),
                 ('gender', models.CharField(max_length=10)),
-                ('birthday', models.CharField(max_length=10)),
+                ('birthday', models.DateField(default=datetime.date)),
                 ('patient_id', models.IntegerField(serialize=False, primary_key=True)),
+                ('patient_email', models.EmailField(default=b'', max_length=254)),
             ],
         ),
     ]
